@@ -60,9 +60,7 @@ namespace BeyondDynamo
         /// Order Player Inputs Menu Item
         /// </summary>
         private MenuItem OrderPlayerInput;
-
-        private MenuItem UnpackCustomNode;
-
+        
         /// <summary>
         /// About Window Menu Item
         /// </summary>
@@ -251,34 +249,6 @@ namespace BeyondDynamo
                 BeyondDynamoFunctions.UnfreezeNodes(VM.Model);
             };
 
-            UnpackCustomNode = new MenuItem { Header = "Unpack Custom Node" };
-            UnpackCustomNode.Click += (sender, args) =>
-            {
-                foreach (Dynamo.Graph.Nodes.NodeModel node in VM.Model.CurrentWorkspace.CurrentSelection)
-                {
-                    WorkspaceModel homeWorkSpace = VM.Model.CurrentWorkspace;
-                    if (node.IsCustomFunction)
-                    {
-                        VM.Model.OpenCustomNodeWorkspace(node.GUID);
-                        string customNodeName = node.Name;
-                        foreach (WorkspaceModel workspace in VM.Model.Workspaces)
-                        {
-                            if (workspace.Name == customNodeName)
-                            {
-                                List<NodeModel> custonNodeNodes = new List<NodeModel>();
-                                VM.Model.CurrentWorkspace = workspace;
-                                foreach (NodeModel nodeModel in VM.CurrentSpace.Nodes)
-                                {
-                                    Forms.MessageBox.Show(nodeModel.Name);
-                                    //custonNodeNodes.Add(nodeModel);
-                                }
-                            }
-                        }
-
-                    }
-                }
-            };
-
             #endregion THE FUNCTIONS WHICH CAN RUN INSIDE AN ACTIVE GRAPH
         
             #region  ADD ALL MENU ITEMS TO THE EXTENSION
@@ -295,7 +265,6 @@ namespace BeyondDynamo
             BDmenuItem.Items.Add(EditNotes);
             BDmenuItem.Items.Add(FreezeNodes);
             BDmenuItem.Items.Add(UnfreezeNodes);
-            BDmenuItem.Items.Add(UnpackCustomNode);
 
             //Main Extension
             BDmenuItem.Items.Add(new Separator());
