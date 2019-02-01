@@ -8,6 +8,10 @@ using Forms = System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using Dynamo.Graph.Workspaces;
 using Dynamo.Graph.Nodes;
+using DynamoCore.UI.Controls;
+using System.Windows.Media;
+using System.IO;
+using System.Windows.Markup;
 
 namespace BeyondDynamo
 {
@@ -60,11 +64,17 @@ namespace BeyondDynamo
         /// Order Player Inputs Menu Item
         /// </summary>
         private MenuItem OrderPlayerInput;
+
+        /// <summary>
+        /// Change Node Colors Menuitem
+        /// </summary>
+        private MenuItem ChangeNodeColors;
         
         /// <summary>
         /// About Window Menu Item
         /// </summary>
         private MenuItem AboutItem;
+        
 
         #region Functions which have to be inplemented for the IViewExtension interface
         /// <summary>
@@ -124,8 +134,18 @@ namespace BeyondDynamo
             //The Title of the Plug-In
             BDmenuItem = new MenuItem { Header = "Beyond Dynamo" };
             DynamoViewModel VM = p.DynamoWindow.DataContext as DynamoViewModel;
-            
+
             #region THE FUNCTIONS WHICH CAN RUN OUTSIDE AN ACTIVE GRAPH
+
+            ChangeNodeColors = new MenuItem { Header = "Change Node Color" };
+            ChangeNodeColors.Click += (sender, args) =>
+            {
+                System.Windows.ResourceDictionary dynamoUI = Dynamo.UI.SharedDictionaryManager.DynamoColorsAndBrushesDictionary;
+                BeyondDynamo.UI.ChangeNodeColorsWindow colorWindow = new BeyondDynamo.UI.ChangeNodeColorsWindow(dynamoUI);
+                colorWindow.Show();
+            };
+            BDmenuItem.Items.Add(ChangeNodeColors);
+
             BatchRemoveTraceData = new MenuItem { Header = "Remove Session Trace Data from Dynamo Graphs" };
             BatchRemoveTraceData.Click += (sender, args) =>
             {
@@ -142,7 +162,8 @@ namespace BeyondDynamo
                 window.Top = window.Owner.Top + 200;
                 window.Show();
             };
-            
+            BDmenuItem.Items.Add(BatchRemoveTraceData);
+
             OrderPlayerInput = new MenuItem { Header = "Order Player Input" };
             OrderPlayerInput.Click += (sender, args) =>
             {
@@ -162,16 +183,12 @@ namespace BeyondDynamo
                     BeyondDynamoFunctions.SortInputNodes(fileDialog.FileName);
                 }
             };
+            BDmenuItem.Items.Add(OrderPlayerInput);
 
-            AboutItem = new MenuItem { Header = "About Beyond Dynamo" };
-            AboutItem.Click += (sender, args) =>
-            {
-                //Show the About dialog
-                About about = new About();
-                about.Show();
-            };
+            BDmenuItem.Items.Add(new Separator());
+            BDmenuItem.Items.Add(new Separator());
             #endregion
-            
+
             #region THE FUNCTIONS WHICH CAN RUN INSIDE AN ACTIVE GRAPH
 
             RemoveTraceData = new MenuItem { Header = "Remove Session Trace Data from Current Graph" };
@@ -210,12 +227,14 @@ namespace BeyondDynamo
                 //Open workspace again
                 VM.Model.OpenFileFromPath(filePath);
             };
+            BDmenuItem.Items.Add(RemoveTraceData);
 
             GroupColor = new MenuItem { Header = "Change Group Color" };
             GroupColor.Click += (sender, args) =>
             {
                 BeyondDynamo.BeyondDynamoFunctions.ChangeGroupColor(VM.CurrentSpaceViewModel.Model);
             };
+            BDmenuItem.Items.Add(GroupColor);
 
             ScriptImport = new MenuItem { Header = "Import From Script" };
             ScriptImport.Click +=(sender, args)=>
@@ -223,6 +242,7 @@ namespace BeyondDynamo
 
                 BeyondDynamoFunctions.ImportFromScript(VM);
             };
+            BDmenuItem.Items.Add(ScriptImport);
 
             EditNotes = new MenuItem { Header = "Edit Note Text" };
             EditNotes.Click += (sender, args) =>
@@ -236,42 +256,35 @@ namespace BeyondDynamo
 
                 BeyondDynamoFunctions.CallTextEditor(VM.Model);
             };
+            BDmenuItem.Items.Add(EditNotes);
 
             FreezeNodes = new MenuItem { Header = "Freeze Multiple Nodes" };
             FreezeNodes.Click += (sender, args) =>
             {
                 BeyondDynamoFunctions.FreezeNodes(VM.Model);
             };
+            BDmenuItem.Items.Add(FreezeNodes);
 
             UnfreezeNodes = new MenuItem { Header = "Unfreeze Multiple Nodes" };
             UnfreezeNodes.Click += (sender, args) =>
             {
                 BeyondDynamoFunctions.UnfreezeNodes(VM.Model);
             };
-
-            #endregion THE FUNCTIONS WHICH CAN RUN INSIDE AN ACTIVE GRAPH
-        
-            #region  ADD ALL MENU ITEMS TO THE EXTENSION
-            //App Extensions
-            BDmenuItem.Items.Add(BatchRemoveTraceData);
-            BDmenuItem.Items.Add(OrderPlayerInput);
-            BDmenuItem.Items.Add(new Separator());
-            BDmenuItem.Items.Add(new Separator());
-
-            //Graph Extensions
-            BDmenuItem.Items.Add(RemoveTraceData);
-            BDmenuItem.Items.Add(GroupColor);
-            BDmenuItem.Items.Add(ScriptImport);
-            BDmenuItem.Items.Add(EditNotes);
-            BDmenuItem.Items.Add(FreezeNodes);
             BDmenuItem.Items.Add(UnfreezeNodes);
-
-            //Main Extension
+            #endregion THE FUNCTIONS WHICH CAN RUN INSIDE AN ACTIVE GRAPH
+            
             BDmenuItem.Items.Add(new Separator());
             BDmenuItem.Items.Add(new Separator());
+            AboutItem = new MenuItem { Header = "About Beyond Dynamo" };
+            AboutItem.Click += (sender, args) =>
+            {
+                //Show the About dialog
+                About about = new About();
+                about.Show();
+            };
             BDmenuItem.Items.Add(AboutItem);
+
             p.dynamoMenu.Items.Add(BDmenuItem);
-            #endregion THE FUNCTIONS WHICH CAN RUN OUTSIDE AN ACTIVE GRAPH
         }
     }
 }

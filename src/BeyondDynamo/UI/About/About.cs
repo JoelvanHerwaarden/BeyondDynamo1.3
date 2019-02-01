@@ -6,10 +6,9 @@ namespace BeyondDynamo.UI.About
 {
     public partial class About : Form
     {
-        public bool beingDragged { get; set; }
-        public int mouseDownX { get; set; }
-        public int mouseDownY { get; set; }
-
+        /// <summary>
+        ///  Public constructor for the about Form
+        /// </summary>
         public About()
         {
             InitializeComponent();
@@ -33,35 +32,6 @@ namespace BeyondDynamo.UI.About
         }
         #endregion
                 
-        #region About window drag functionality
-        private void ApplicationUI_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                beingDragged = true;
-                mouseDownX = e.X;
-                mouseDownY = e.Y;
-            }
-
-        }
-        private void ApplicationUI_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                beingDragged = false;
-            }
-        }
-        private void ApplicationUI_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (beingDragged)
-            {
-                Point position = new Point();
-                position.X = Location.X + (e.X - mouseDownX);
-                position.Y = Location.Y + (e.Y - mouseDownY);
-                Location = position;
-            }
-        }
-        #endregion
 
         #region GitHub Label Events
         private void GitHub_Label_Click(object sender, EventArgs e)
