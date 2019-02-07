@@ -5,8 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BeyondDynamo.UI"
              mc:Ignorable="d" Height="299.054" Width="425.664" Background="#FF8C8C8C" ResizeMode="NoResize" Title="Change Node Colors">
-	<Grid Margin="0,0,0,0" Background="#FF8C8C8C">
-		<TabControl Margin="10,10,0,0" Height="185" VerticalAlignment="Top" HorizontalAlignment="Left" Width="388">
+	<Grid Name="MainGrid" Margin="0,0,0,0" Background="#FF8C8C8C">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="139*"/>
+			<ColumnDefinition Width="280*"/>
+		</Grid.ColumnDefinitions>
+		<TabControl Margin="10,10,0,0" Height="185" VerticalAlignment="Top" HorizontalAlignment="Left" Width="388" Grid.ColumnSpan="2">
 			<TabItem x:Name="NodeInactiveTab" Header="Node Inactive" Margin="-2,0,-10,-3" Background="#FFCFD6EA" ClipToBounds="True">
 				<Grid Background="#FFE5E5E5" Margin="0,0,-0.2,-0.4">
 					<Label Content="Node Title Text" Margin="10,10,10.4,0" VerticalAlignment="Top"/>
@@ -14,11 +18,11 @@
 					<Label Content="Node Title Border" Margin="10,62,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="104"/>
 					<Label Content="Node Body Background" Margin="10,86,10.4,0" VerticalAlignment="Top"/>
 					<Label Content="Node Body Border" Margin="10,114,0.4,0" VerticalAlignment="Top"/>
-					<Button x:FieldModifier="public" x:Name="ITitleText" Background="#FFF4F4F5" Margin="187,13,10,0" Height="22" VerticalAlignment="Top"			Click="Button_Click"/>
-					<Button x:FieldModifier="public" x:Name="ITitleBackground" Background="#FFF4F4F5" Margin="187,40,10,0" Height="22" VerticalAlignment="Top"		Click="Button_Click"/>
-					<Button x:FieldModifier="public" x:Name="ITitleBorder" Background="#FFF4F4F5" Margin="187,66,10,0" Height="22" VerticalAlignment="Top"			Click="Button_Click"/>
-					<Button x:FieldModifier="public" x:Name="IBodyBackground" Background="#FFF4F4F5" Margin="187,92,10.4,0"  Height="22" VerticalAlignment="Top"	Click="Button_Click"/>
-					<Button x:FieldModifier="public" x:Name="IBodyBorder" Background="#FFF4F4F5" Margin="187,117,10.8,0" Height="22" VerticalAlignment="Top"		Click="Button_Click"/>
+					<Button x:FieldModifier="public" x:Name="ITitleText" Background="#FFF4F4F5" Margin="187,13,10,0" Height="22" VerticalAlignment="Top"			Click="changeColorButton_Click"/>
+					<Button x:FieldModifier="public" x:Name="ITitleBackground" Background="#FFF4F4F5" Margin="187,40,10,0" Height="22" VerticalAlignment="Top"		Click="changeColorButton_Click"/>
+					<Button x:FieldModifier="public" x:Name="ITitleBorder" Background="#FFF4F4F5" Margin="187,66,10,0" Height="22" VerticalAlignment="Top"			Click="changeColorButton_Click"/>
+					<Button x:FieldModifier="public" x:Name="IBodyBackground" Background="#FFF4F4F5" Margin="187,92,10.4,0"  Height="22" VerticalAlignment="Top"	Click="changeColorButton_Click"/>
+					<Button x:FieldModifier="public" x:Name="IBodyBorder" Background="#FFF4F4F5" Margin="187,117,10.8,0" Height="22" VerticalAlignment="Top"		Click="changeColorButton_Click"/>
 				</Grid>
 			</TabItem>
 			<TabItem x:Name="NodeActiveTab" Header="Node Active" Margin="3,0,-24.6,-3" Background="#FFCFD6EA">
@@ -28,11 +32,11 @@
 					<Label Content="Node Title Border" Margin="10,62,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="104"/>
 					<Label Content="Node Body Background" Margin="10,86,10.4,0" VerticalAlignment="Top"/>
 					<Label Content="Node Body Border" Margin="10,114,0.4,0" VerticalAlignment="Top"/>
-					<Button x:FieldModifier="public" x:Name="ATitleText" Background="#FFF4F4F5" Margin="187,13,10,0" Height="22" VerticalAlignment="Top"		Click="Button_Click"/>
-					<Button x:FieldModifier="public" x:Name="ATitleBackground" Background="#FFF4F4F5" Margin="187,40,10,0" Height="22" VerticalAlignment="Top"	Click="Button_Click"/>
-					<Button x:FieldModifier="public" x:Name="ATitleBorder" Background="#FFF4F4F5" Margin="187,66,10,0" Height="22" VerticalAlignment="Top"		Click="Button_Click"/>
-					<Button x:FieldModifier="public" x:Name="ABodyBackground" Background="#FFF4F4F5" Margin="187,92,10.4,0" Height="22" VerticalAlignment="Top"	Click="Button_Click"/>
-					<Button x:FieldModifier="public" x:Name="ABodyBorder" Background="#FFF4F4F5" Margin="187,118,10.4,0" Height="22" VerticalAlignment="Top"	Click="Button_Click"/>
+					<Button x:FieldModifier="public" x:Name="ATitleText" Background="#FFF4F4F5" Margin="187,13,10,0" Height="22" VerticalAlignment="Top"		Click="changeColorButton_Click"/>
+					<Button x:FieldModifier="public" x:Name="ATitleBackground" Background="#FFF4F4F5" Margin="187,40,10,0" Height="22" VerticalAlignment="Top"	Click="changeColorButton_Click"/>
+					<Button x:FieldModifier="public" x:Name="ATitleBorder" Background="#FFF4F4F5" Margin="187,66,10,0" Height="22" VerticalAlignment="Top"		Click="changeColorButton_Click"/>
+					<Button x:FieldModifier="public" x:Name="ABodyBackground" Background="#FFF4F4F5" Margin="187,92,10.4,0" Height="22" VerticalAlignment="Top"	Click="changeColorButton_Click"/>
+					<Button x:FieldModifier="public" x:Name="ABodyBorder" Background="#FFF4F4F5" Margin="187,118,10.4,0" Height="22" VerticalAlignment="Top"	Click="changeColorButton_Click"/>
 				</Grid>
 			</TabItem>
 			<TabItem x:Name="NodeWarningTab" Header="Node Warning" Margin="22.6,0,-31.4,-3" Background="#FFCFD6EA">
@@ -42,11 +46,11 @@
 					<Label Content="Node Title Border" Margin="10,62,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="104"/>
 					<Label Content="Node Body Background" Margin="10,86,10.4,0" VerticalAlignment="Top"/>
 					<Label Content="Node Body Border" Margin="10,114,0.4,0" VerticalAlignment="Top"/>
-					<Button x:FieldModifier="public" x:Name="WTitleText" Background="#FFF4F4F5" Margin="187,13,10,0" Height="22" VerticalAlignment="Top"			Click="Button_Click"/>
-					<Button x:FieldModifier="public" x:Name="WTitleBackground" Background="#FFF4F4F5" Margin="187,40,10,0" Height="22" VerticalAlignment="Top"		Click="Button_Click"/>
-					<Button x:FieldModifier="public" x:Name="WTitleBorder" Background="#FFF4F4F5" Margin="187,66,10,0" Height="22" VerticalAlignment="Top"			Click="Button_Click"/>
-					<Button x:FieldModifier="public" x:Name="WBodyBackground" Background="#FFF4F4F5" Margin="187,92,10.4,0" Height="22" VerticalAlignment="Top"		Click="Button_Click"/>
-					<Button x:FieldModifier="public" x:Name="WBodyBorder" Background="#FFF4F4F5" Margin="187,118,10.4,0" Height="22" VerticalAlignment="Top"		Click="Button_Click"/>
+					<Button x:FieldModifier="public" x:Name="WTitleText" Background="#FFF4F4F5" Margin="187,13,10,0" Height="22" VerticalAlignment="Top"			Click="changeColorButton_Click"/>
+					<Button x:FieldModifier="public" x:Name="WTitleBackground" Background="#FFF4F4F5" Margin="187,40,10,0" Height="22" VerticalAlignment="Top"		Click="changeColorButton_Click"/>
+					<Button x:FieldModifier="public" x:Name="WTitleBorder" Background="#FFF4F4F5" Margin="187,66,10,0" Height="22" VerticalAlignment="Top"			Click="changeColorButton_Click"/>
+					<Button x:FieldModifier="public" x:Name="WBodyBackground" Background="#FFF4F4F5" Margin="187,92,10.4,0" Height="22" VerticalAlignment="Top"		Click="changeColorButton_Click"/>
+					<Button x:FieldModifier="public" x:Name="WBodyBorder" Background="#FFF4F4F5" Margin="187,118,10.4,0" Height="22" VerticalAlignment="Top"		Click="changeColorButton_Click"/>
 				</Grid>
 			</TabItem>
 			<TabItem x:Name="NodeErrorTab" Header="Node Error" Margin="29.4,0,-57.4,-3" Background="#FFCFD6EA">
@@ -56,16 +60,16 @@
 					<Label Content="Node Title Border" Margin="10,62,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="104"/>
 					<Label Content="Node Body Background" Margin="10,86,10.4,0" VerticalAlignment="Top"/>
 					<Label Content="Node Body Border" Margin="10,114,0.4,0" VerticalAlignment="Top"/>
-					<Button x:FieldModifier="public" x:Name="ETitleText" Background="#FFF4F4F5" Margin="187,13,10,0"  Height="22" VerticalAlignment="Top"			Click="Button_Click"/>
-					<Button x:FieldModifier="public" x:Name="ETitleBackground" Background="#FFF4F4F5" Margin="187,40,10,0" Height="22" VerticalAlignment="Top"		Click="Button_Click"/>
-					<Button x:FieldModifier="public" x:Name="ETitleBorder" Background="#FFF4F4F5" Margin="187,66,10,0"  Height="22" VerticalAlignment="Top"			Click="Button_Click"/>
-					<Button x:FieldModifier="public" x:Name="EBodyBackground" Background="#FFF4F4F5" Margin="187,92,10.4,0"  Height="22" VerticalAlignment="Top"	Click="Button_Click"/>
-					<Button x:FieldModifier="public" x:Name="EBodyBorder" Background="#FFF4F4F5" Margin="187,118,10.4,0"  Height="22" VerticalAlignment="Top"		Click="Button_Click"/>
+					<Button x:FieldModifier="public" x:Name="ETitleText" Background="#FFF4F4F5" Margin="187,13,10,0"  Height="22" VerticalAlignment="Top"			Click="changeColorButton_Click"/>
+					<Button x:FieldModifier="public" x:Name="ETitleBackground" Background="#FFF4F4F5" Margin="187,40,10,0" Height="22" VerticalAlignment="Top"		Click="changeColorButton_Click"/>
+					<Button x:FieldModifier="public" x:Name="ETitleBorder" Background="#FFF4F4F5" Margin="187,66,10,0"  Height="22" VerticalAlignment="Top"			Click="changeColorButton_Click"/>
+					<Button x:FieldModifier="public" x:Name="EBodyBackground" Background="#FFF4F4F5" Margin="187,92,10.4,0"  Height="22" VerticalAlignment="Top"	Click="changeColorButton_Click"/>
+					<Button x:FieldModifier="public" x:Name="EBodyBorder" Background="#FFF4F4F5" Margin="187,118,10.4,0"  Height="22" VerticalAlignment="Top"		Click="changeColorButton_Click"/>
 				</Grid>
 			</TabItem>
 		</TabControl>
-		<Button Content="Save template" Margin="208,233,0,0" Click="Save_Click" HorizontalAlignment="Left" Width="190" Background="White" Height="25" VerticalAlignment="Top"/>
-		<Button Content="How to Use" Margin="10,233,0,0" Click="HowToUse_Click" HorizontalAlignment="Left" Width="190" Background="White" Height="25" VerticalAlignment="Top"/>
-		<Button Content="Open Dynamo Templates Directory" Margin="10,203,0,0" Click="Open_Click" HorizontalAlignment="Left" Width="388" Background="White" Height="25" VerticalAlignment="Top"/>
+		<Button Content="Save template" Margin="68.933,233,0,0" Click="Save_Click" HorizontalAlignment="Left" Width="190" Background="White" Height="25" VerticalAlignment="Top" Grid.Column="1"/>
+		<Button Content="How to Use" Margin="10,233,0,0" Click="HowToUse_Click" HorizontalAlignment="Left" Width="190" Background="White" Height="25" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+		<Button Content="Open Dynamo Templates Directory" Margin="10,203,0,0" Click="Open_Click" HorizontalAlignment="Left" Width="388" Background="White" Height="25" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
 	</Grid>
 </Window>

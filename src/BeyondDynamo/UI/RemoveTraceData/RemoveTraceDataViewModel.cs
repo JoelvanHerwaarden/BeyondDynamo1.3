@@ -2,7 +2,7 @@
 using Dynamo.Core;
 using Dynamo.Extensions;
 
-namespace BeyondDynamo
+namespace BeyondDynamo.UI
 {
     class RemoveTraceDataViewModel : NotificationObject, IDisposable
     {

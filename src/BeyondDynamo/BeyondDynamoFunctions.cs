@@ -8,6 +8,7 @@ using Dynamo.Models;
 using Dynamo.Graph.Notes;
 using Dynamo.Graph.Connectors;
 using Dynamo.Graph.Nodes;
+using BeyondDynamo.UI;
 
 namespace BeyondDynamo
 {
@@ -320,7 +321,7 @@ namespace BeyondDynamo
         /// This Functions Calls a Text Editor Window for Each Selected Note in the Dynamo Model.
         /// </summary>
         /// <param name="model">The Current Dynamo Model</param>
-        public static void CallTextEditor(DynamoModel model)
+        public static IEnumerable<Dynamo.Graph.Notes.NoteModel> GetTextNotes(DynamoModel model)
         {
             WorkspaceModel workspaceModel = model.CurrentWorkspace;
             
@@ -338,30 +339,20 @@ namespace BeyondDynamo
             {
                 System.Windows.MessageBox.Show("No Notes Selected");
                 KeepSelection(model);
-                return;
+                return null;
             }
 
             IEnumerable<Dynamo.Graph.Notes.NoteModel> notes = workspaceModel.Notes;
-            foreach (Dynamo.Graph.Notes.NoteModel note in notes)
-            {
-                if (note.IsSelected)
-                {
-                    TextBoxWindow textBox = new TextBoxWindow(note.Text);
-                    textBox.Show();
-                    textBox.Closed += (send, arg) =>
-                    {
-                        note.Text = textBox.text;
-                    };
-                }
-            }
-            KeepSelection(model);
+            return notes;
+
+
         }
 
         /// <summary>
         /// Lets you Sort the Input Nodes for a Dynamo Script by a given Filepath 
         /// </summary>
         /// <param name="filePath">The Filepath to the Dynamo 1.3 File</param>
-        public static void SortInputNodes(string filePath)
+        public static List<string> GetInputNodes(string filePath)
         {
             List<string> inputNodeNames = new List<string>();
             XmlDocument doc = new XmlDocument();
@@ -385,16 +376,7 @@ namespace BeyondDynamo
                 }
             }
 
-            OrderPlayerInputWindow orderPlayerInput = new OrderPlayerInputWindow(inputNodeNames);
-            if (inputNodeNames.Count <= 0)
-            {
-                System.Windows.MessageBox.Show("No input nodes found");
-                return;
-            }
-
-            orderPlayerInput.dynamoGraph = doc;
-            orderPlayerInput.dynamoGraphPath = filePath;
-            orderPlayerInput.Show();
+            return inputNodeNames;
         }
     }
 }

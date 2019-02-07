@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace BeyondDynamo
+namespace BeyondDynamo.UI
 {
     /// <summary>
     /// Interaction logic for TextBoxWindow.xaml

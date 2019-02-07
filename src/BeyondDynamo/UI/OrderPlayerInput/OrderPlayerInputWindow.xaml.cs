@@ -3,7 +3,7 @@ using System.Xml;
 using System.Collections.Generic;
 
 
-namespace BeyondDynamo
+namespace BeyondDynamo.UI
 {
     /// <summary>
     /// Interaction logic for RemoveTraceDataWindow.xaml

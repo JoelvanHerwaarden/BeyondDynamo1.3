@@ -165,6 +165,7 @@
     <Compile Include="UI\ChangeNodeColor\ChangeNodeColorsWindow.xaml.cs">
       <DependentUpon>ChangeNodeColorsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\ChangeNodeColor\ChangeNodeColorsViewModel.cs" />
     <Compile Include="UI\OrderPlayerInput\OrderPlayerInputViewModel.cs" />
     <Compile Include="UI\OrderPlayerInput\OrderPlayerInputWindow.xaml.cs">
       <DependentUpon>OrderPlayerInputWindow.xaml</DependentUpon>

@@ -105,9 +105,15 @@ namespace BeyondDynamo.UI
             this.EBodyBorder.Background           = _EBodyBorder;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+
+        /// <summary>
+        /// This event gets called when pressing a Color Button in the Change Node Color Window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void changeColorButton_Click(object sender, RoutedEventArgs e)
         {
-            Button button = (Button)sender;
+            Button changeColorButton = (Button)sender;
             System.Windows.Forms.ColorDialog colorDialog = new System.Windows.Forms.ColorDialog();
             if (colorDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -119,15 +125,25 @@ namespace BeyondDynamo.UI
                     G = color.G,
                     B = color.B
                 };
-                button.Background = new SolidColorBrush(newColor);
+                changeColorButton.Background = new SolidColorBrush(newColor);
             }
         }
 
+        /// <summary>
+        /// This Cancels and Closes the Change node Color Window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
+        /// <summary>
+        /// This will open a File Save Dialog. The user can save the Template somewhere easy to find for later copy pasting in the template folder. Use Open_Click to get the template folder.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Save_Click(object sender, RoutedEventArgs e)
         {
 

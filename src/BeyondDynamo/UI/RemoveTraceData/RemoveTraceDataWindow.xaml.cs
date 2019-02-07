@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Dynamo.ViewModels;
 using System;
 
-namespace BeyondDynamo
+namespace BeyondDynamo.UI
 {
     /// <summary>
     /// Interaction logic for RemoveTraceDataWindow.xaml

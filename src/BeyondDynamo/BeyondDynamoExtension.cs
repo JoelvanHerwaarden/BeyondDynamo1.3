@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Dynamo.Wpf.Extensions;
 using Dynamo.ViewModels;
 using BeyondDynamo.UI.About;
+using BeyondDynamo.UI;
 using Forms = System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using Dynamo.Graph.Workspaces;
@@ -12,6 +13,7 @@ using DynamoCore.UI.Controls;
 using System.Windows.Media;
 using System.IO;
 using System.Windows.Markup;
+using System.Xml;
 
 namespace BeyondDynamo
 {
@@ -140,8 +142,24 @@ namespace BeyondDynamo
             ChangeNodeColors = new MenuItem { Header = "Change Node Color" };
             ChangeNodeColors.Click += (sender, args) =>
             {
+                //Make a Viewmodel for the Change Node Color Window
+                var viewModel = new BeyondDynamo.UI.ChangeNodeColorsViewModel(p);
+
+                //Get the current Node Color Template
                 System.Windows.ResourceDictionary dynamoUI = Dynamo.UI.SharedDictionaryManager.DynamoColorsAndBrushesDictionary;
-                BeyondDynamo.UI.ChangeNodeColorsWindow colorWindow = new BeyondDynamo.UI.ChangeNodeColorsWindow(dynamoUI);
+
+                //Initiate a new Change Node Color Window
+                ChangeNodeColorsWindow colorWindow = new ChangeNodeColorsWindow(dynamoUI)
+                {
+                    // Set the data context for the main grid in the window.
+                    MainGrid = { DataContext = viewModel },
+                    // Set the owner of the window to the Dynamo window.
+                    Owner = p.DynamoWindow,
+                };
+                colorWindow.Left = colorWindow.Owner.Left + 400;
+                colorWindow.Top = colorWindow.Owner.Top + 200;
+
+                //Show the Color window
                 colorWindow.Show();
             };
             BDmenuItem.Items.Add(ChangeNodeColors);
@@ -149,17 +167,20 @@ namespace BeyondDynamo
             BatchRemoveTraceData = new MenuItem { Header = "Remove Session Trace Data from Dynamo Graphs" };
             BatchRemoveTraceData.Click += (sender, args) =>
             {
+                //Make a ViewModel for the Remove Trace Data window
                 var viewModel = new RemoveTraceDataViewModel(p);
-                var window = new RemoveTraceDataWindow()
+
+                //Initiate a new Remove Trace Data window
+                RemoveTraceDataWindow window = new RemoveTraceDataWindow()
                 {
-                    // Set the data context for the main grid in the window.
                     MainGrid = { DataContext = viewModel },
-                    // Set the owner of the window to the Dynamo window.
                     Owner = p.DynamoWindow,
                     viewModel = VM
                 };
                 window.Left = window.Owner.Left + 400;
                 window.Top = window.Owner.Top + 200;
+
+                //Show the window
                 window.Show();
             };
             BDmenuItem.Items.Add(BatchRemoveTraceData);
@@ -170,17 +191,46 @@ namespace BeyondDynamo
                 //Open a FileBrowser Dialog so the user can select a Dynamo Graph
                 System.Windows.Forms.OpenFileDialog fileDialog = new System.Windows.Forms.OpenFileDialog();
                 fileDialog.Filter = "Dynamo Files (*.dyn)|*.dyn";
+
+                //Make an empty list for the input names
                 List<string> inputNodeNames = new List<string>();
+
+                //Open a File Dialog
                 if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
+                    //Make a viewModel for the Order player input window
+                    var viewModel = new BeyondDynamo.UI.OrderPlayerInputViewModel(p);
+
                     //Check if the Selected FilePath is not open
-                    if(BeyondDynamoFunctions.IsFileOpen(VM, fileDialog.FileName))
+                    if (BeyondDynamoFunctions.IsFileOpen(VM, fileDialog.FileName))
                     {
                         Forms.MessageBox.Show("Please close the File before opening it", "Close file");
                         return;
                     }
+
                     //Call the SortInputNodes Function
-                    BeyondDynamoFunctions.SortInputNodes(fileDialog.FileName);
+                    List<string> inputNodesNames = BeyondDynamoFunctions.GetInputNodes(fileDialog.FileName);
+                    
+                    //Check if there are any input nodes
+                    if (inputNodeNames.Count <= 0)
+                    {
+                        System.Windows.MessageBox.Show("No input nodes found");
+                        return;
+                    }
+
+                    //Initiate a Order Player Input Window
+                    OrderPlayerInputWindow orderPlayerInput = new OrderPlayerInputWindow(inputNodeNames)
+                    {
+                        MainGrid = { DataContext = viewModel },
+                        Owner = p.DynamoWindow
+                    };
+                    orderPlayerInput.Left = orderPlayerInput.Owner.Left + 400;
+                    orderPlayerInput.Top = orderPlayerInput.Owner.Top + 200;
+
+                    //Apply properties
+                    orderPlayerInput.dynamoGraph = new XmlDocument();
+                    orderPlayerInput.dynamoGraphPath = fileDialog.FileName;
+                    orderPlayerInput.Show();
                 }
             };
             BDmenuItem.Items.Add(OrderPlayerInput);
@@ -254,7 +304,30 @@ namespace BeyondDynamo
                     return;
                 }
 
-                BeyondDynamoFunctions.CallTextEditor(VM.Model);
+                IEnumerable<Dynamo.Graph.Notes.NoteModel> notes = BeyondDynamoFunctions.GetTextNotes(VM.Model);
+                if (notes != null)
+                {
+                    foreach (Dynamo.Graph.Notes.NoteModel note in notes)
+                    {
+                        if (note.IsSelected)
+                        {
+                            var viewModel = new TextBoxViewModel(p);
+                            TextBoxWindow textBox = new TextBoxWindow(note.Text)
+                            {
+                                MainGrid = { DataContext = viewModel },
+                                Owner = p.DynamoWindow
+                            };
+                            textBox.Left = textBox.Owner.Left + 400;
+                            textBox.Top = textBox.Owner.Top + 200;
+                            textBox.Show();
+                            textBox.Closed += (send, arg) =>
+                            {
+                                note.Text = textBox.text;
+                            };
+                        }
+                    }
+                    BeyondDynamoFunctions.KeepSelection(VM.Model);
+                }
             };
             BDmenuItem.Items.Add(EditNotes);
 
