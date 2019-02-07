@@ -1,0 +1,3 @@
+Copy BeyondDynamo.dll to C:\Program Files\Dynamo\Dynamo Core\1.3
+
+Copy BeyondDynamo_ViewExtensionDefinition.xml to C:\Program Files\Dynamo\Dynamo Core\1.3\viewExtensions
