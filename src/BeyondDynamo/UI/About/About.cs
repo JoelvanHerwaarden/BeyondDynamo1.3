@@ -9,9 +9,10 @@ namespace BeyondDynamo.UI.About
         /// <summary>
         ///  Public constructor for the about Form
         /// </summary>
-        public About()
+        public About(double version)
         {
             InitializeComponent();
+            versionLabel.Text = "Version " + version.ToString();
         }
         
 

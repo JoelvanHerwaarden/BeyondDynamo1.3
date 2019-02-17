@@ -100,7 +100,8 @@ namespace BeyondDynamo.UI
             {
                 InputNodeNames.Add(name);
             }
-
+            XmlDocument dynamoGraph = new XmlDocument();
+            dynamoGraph.Load(dynamoGraphPath);
             foreach (XmlElement child in dynamoGraph.DocumentElement)
             {
                 if (child.Name == "Elements")

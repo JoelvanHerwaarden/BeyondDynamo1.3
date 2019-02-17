@@ -9,6 +9,13 @@ using Dynamo.Graph.Notes;
 using Dynamo.Graph.Connectors;
 using Dynamo.Graph.Nodes;
 using BeyondDynamo.UI;
+using System.Windows;
+using static Dynamo.Models.DynamoModel;
+using System.Net.Http;
+using Forms = System.Windows.Forms;
+using System.Net;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace BeyondDynamo
 {
@@ -154,16 +161,18 @@ namespace BeyondDynamo
         /// <param name="DynamoFilePath"></param>
         public static void ImportXMLDynamo(DynamoViewModel viewModel, string DynamoFilePath)
         {
+            //Set the Run Type on Manual
+            viewModel.CurrentSpaceViewModel.RunSettingsViewModel.SelectedRunTypeItem = new Dynamo.Wpf.ViewModels.RunTypeItem(RunType.Manual);
             WorkspaceModel model = viewModel.Model.CurrentWorkspace;
-
+            
             //Create two lists for the Selection of the imported model
             List<string> guidList = new List<string>();
             List<dynamic> selectionList = new List<dynamic>();
-
-            //Load a XML Document from the Dynamo File\
+            
+            //Load a XML Document from the Dynamo File
             XmlDocument doc = new XmlDocument();
             doc.Load(DynamoFilePath);
-
+            
             //Loop over the XML Elements in the Document
             foreach (XmlElement node in doc.DocumentElement)
             {
@@ -205,6 +214,7 @@ namespace BeyondDynamo
                 }
             }
             #endregion
+            
 
             //Check Notes
             #region
@@ -220,6 +230,7 @@ namespace BeyondDynamo
                 }
             }
             #endregion
+            
 
             //Check Nodes
             #region
@@ -235,12 +246,14 @@ namespace BeyondDynamo
                 }
             }
             #endregion
+            
 
             foreach (dynamic item in selectionList)
             {
                 viewModel.Model.AddToSelection(item);
             }
             #endregion
+            
         }
 
         /// <summary>
@@ -349,7 +362,7 @@ namespace BeyondDynamo
         }
 
         /// <summary>
-        /// Lets you Sort the Input Nodes for a Dynamo Script by a given Filepath 
+        /// Returns all the input node names within a given Graph File Path
         /// </summary>
         /// <param name="filePath">The Filepath to the Dynamo 1.3 File</param>
         public static List<string> GetInputNodes(string filePath)
@@ -366,16 +379,16 @@ namespace BeyondDynamo
                         XmlAttributeCollection attributes = Node.Attributes;
                         try
                         {
-                            if (attributes["isSelectedInput"].Value == "True")
+                            if (attributes["isSelectedInput"].Value.ToString() == "True")
                             {
-                                inputNodeNames.Add(attributes["nickname"].Value);
+                                string nodeName = attributes["nickname"].Value.ToString();
+                                inputNodeNames.Add(nodeName);
                             }
                         }
                         catch { }
                     }
                 }
             }
-
             return inputNodeNames;
         }
     }

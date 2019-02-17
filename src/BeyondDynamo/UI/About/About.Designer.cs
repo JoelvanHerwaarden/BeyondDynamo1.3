@@ -1,5 +1,8 @@
 ﻿namespace BeyondDynamo.UI.About
 {
+    /// <summary>
+    /// THe About Window Class
+    /// </summary>
     partial class About
     {
         /// <summary>
@@ -29,7 +32,7 @@
         private void InitializeComponent()
         {
             this.LinkedIn_Label = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.versionLabel = new System.Windows.Forms.Label();
             this.GitHub_Label = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -48,16 +51,16 @@
             this.LinkedIn_Label.MouseEnter += new System.EventHandler(this.GitHub_Label_MouseEnter);
             this.LinkedIn_Label.MouseLeave += new System.EventHandler(this.GitHub_Label_MouseLeave);
             // 
-            // label2
+            // versionLabel
             // 
-            this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.ForeColor = System.Drawing.Color.Silver;
-            this.label2.Location = new System.Drawing.Point(995, 469);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(79, 17);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "Build: 1.0.0";
+            this.versionLabel.AutoSize = true;
+            this.versionLabel.BackColor = System.Drawing.Color.Transparent;
+            this.versionLabel.ForeColor = System.Drawing.Color.Silver;
+            this.versionLabel.Location = new System.Drawing.Point(995, 469);
+            this.versionLabel.Name = "versionLabel";
+            this.versionLabel.Size = new System.Drawing.Size(79, 17);
+            this.versionLabel.TabIndex = 8;
+            this.versionLabel.Text = "Build: 1.0.0";
             // 
             // GitHub_Label
             // 
@@ -82,7 +85,7 @@
             this.BackgroundImage = global::BeyondDynamo.resources.BeyondDynamo_Banner;
             this.ClientSize = new System.Drawing.Size(1086, 495);
             this.Controls.Add(this.GitHub_Label);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.versionLabel);
             this.Controls.Add(this.LinkedIn_Label);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -97,7 +100,7 @@
 
         #endregion
         private System.Windows.Forms.Label LinkedIn_Label;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label versionLabel;
         private System.Windows.Forms.Label GitHub_Label;
     }
 }

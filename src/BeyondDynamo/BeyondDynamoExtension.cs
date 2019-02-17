@@ -14,6 +14,14 @@ using System.Windows.Media;
 using System.IO;
 using System.Windows.Markup;
 using System.Xml;
+using static Dynamo.Models.DynamoModel;
+using System.Net.Http;
+using System.Net;
+using System.Text;
+using Octokit;
+using Dynamo.Graph.Notes;
+using Dynamo.Graph.Annotations;
+using Newtonsoft.Json.Linq;
 
 namespace BeyondDynamo
 {
@@ -22,6 +30,13 @@ namespace BeyondDynamo
     /// </summary>
     public class BeyondDynamoExtension : IViewExtension
     {
+        /// <summary>
+        /// Request URL for the Releases
+        /// </summary>
+        private const string RequestUri = "https://api.github.com/repos/JoelvanHerwaarden/BeyondDynamo1.3/releases";
+
+        private MenuItem LatestVerion;
+
         /// <summary>
         /// Head Menu Item
         /// </summary>
@@ -77,8 +92,7 @@ namespace BeyondDynamo
         /// </summary>
         private MenuItem AboutItem;
         
-
-        #region Functions which have to be inplemented for the IViewExtension interface
+        
         /// <summary>
         /// Dispose
         /// </summary>
@@ -89,6 +103,35 @@ namespace BeyondDynamo
         /// <param name="p"></param>
         public void Startup(ViewStartupParams p)
         {
+            try
+            {
+                List<double> releasedVersions = new List<double>();
+
+                HttpWebRequest webRequest = WebRequest.CreateHttp(RequestUri);
+                webRequest.ContentType = "application/json";
+                webRequest.UserAgent = "Foo";
+                webRequest.Accept = "application/json";
+                webRequest.Method = "GET";
+
+                WebResponse response = webRequest.GetResponse();
+                Stream dataStream = response.GetResponseStream();
+
+                StreamReader reader = new StreamReader(dataStream);
+                string result = reader.ReadToEnd();
+
+                JToken githubReleases = JToken.Parse(result);
+                foreach (JObject release in githubReleases.Children())
+                {
+                    JToken version = release.GetValue("tag_name");
+                    releasedVersions.Add((double)version);
+                }
+                releasedVersions.Sort();
+                this.latestVersion = releasedVersions[releasedVersions.Count - 1];
+            }
+            catch
+            {
+                this.latestVersion = this.currentVersion;
+            }
         }
         /// <summary>
         /// CurrentSpaceViewModel_WorkspacePropertyEditRequested
@@ -121,11 +164,25 @@ namespace BeyondDynamo
         {
             get
             {
-                return "Remove Trace Data";
+                return "Beyond Dynamo 1.3";
             }
         }
-        #endregion
 
+        /// <summary>
+        /// Get the CUrrent Version of Beyond Dynamo for Dynamo 1.3
+        /// </summary>
+        private double currentVersion
+        {
+            get
+            {
+                return 1.1;
+            }
+        }
+
+        /// <summary>
+        /// The Latest version of Beyond Dynamo 1.3 on Github
+        /// </summary>
+        private double latestVersion { get; set; }
 
         /// <summary>
         /// Function Which gets Called on Loading the Plug-In
@@ -136,6 +193,16 @@ namespace BeyondDynamo
             //The Title of the Plug-In
             BDmenuItem = new MenuItem { Header = "Beyond Dynamo" };
             DynamoViewModel VM = p.DynamoWindow.DataContext as DynamoViewModel;
+
+            LatestVerion = new MenuItem { Header = "New version available! Download now!" };
+            LatestVerion.Click += (sender, args) =>
+            {
+                System.Diagnostics.Process.Start("www.github.com/JoelvanHerwaarden/BeyondDynamo1.3/releases");
+            };
+            if (this.currentVersion < this.latestVersion)
+            {
+                BDmenuItem.Items.Add(LatestVerion);
+            }
 
             #region THE FUNCTIONS WHICH CAN RUN OUTSIDE AN ACTIVE GRAPH
 
@@ -191,10 +258,7 @@ namespace BeyondDynamo
                 //Open a FileBrowser Dialog so the user can select a Dynamo Graph
                 System.Windows.Forms.OpenFileDialog fileDialog = new System.Windows.Forms.OpenFileDialog();
                 fileDialog.Filter = "Dynamo Files (*.dyn)|*.dyn";
-
-                //Make an empty list for the input names
-                List<string> inputNodeNames = new List<string>();
-
+                
                 //Open a File Dialog
                 if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
@@ -209,10 +273,10 @@ namespace BeyondDynamo
                     }
 
                     //Call the SortInputNodes Function
-                    List<string> inputNodesNames = BeyondDynamoFunctions.GetInputNodes(fileDialog.FileName);
-                    
+                    List<string> inputNodeNames = BeyondDynamoFunctions.GetInputNodes(fileDialog.FileName);
+
                     //Check if there are any input nodes
-                    if (inputNodeNames.Count <= 0)
+                    if (inputNodeNames.Count == 0)
                     {
                         System.Windows.MessageBox.Show("No input nodes found");
                         return;
@@ -240,6 +304,53 @@ namespace BeyondDynamo
             #endregion
 
             #region THE FUNCTIONS WHICH CAN RUN INSIDE AN ACTIVE GRAPH
+            //NodeManager = new MenuItem { Header = "Node Manager" };
+            //NodeManager.Click += (sender, args) =>
+            //{
+            //    WorkspaceModel workspace = VM.Model.CurrentWorkspace;
+            //    List<NodeModel> workSpaceNodes = new List<NodeModel>();
+            //    foreach(NodeModel node in workspace.Nodes)
+            //    {
+            //        workSpaceNodes.Add(node);
+            //    }
+            //    UI.NodeManagerWindow nodeManager = new NodeManagerWindow(workSpaceNodes);
+            //    nodeManager.Show();
+            //};
+            //BDmenuItem.Items.Add(NodeManager);
+
+            //GroupElements = new MenuItem { Header = "Merge Multiple Groups" };
+            //GroupElements.Click += (sender, args) =>
+            //{
+            //    WorkspaceModel workspace = VM.Model.CurrentWorkspace;
+            //    IEnumerable<NodeModel> currentSelection = workspace.CurrentSelection;
+            //    IList<NoteModel> selectedNotes = new List<NoteModel>();
+            //    IList<string> selectedGroupTitles = new List<string>();
+            //    foreach (NoteModel note in workspace.Notes)
+            //    {
+            //        if (note.IsSelected)
+            //        {
+            //            selectedNotes.Add(note);
+            //        }
+            //    }
+
+            //    foreach(AnnotationModel group in workspace.Annotations)
+            //    {
+            //        if (group.IsSelected)
+            //        {
+            //            selectedGroupTitles.Add(group.AnnotationText);
+            //            selectedGroupTitles.Add("\n");
+            //        }
+            //    }
+
+            //    AnnotationModel newGroup = new AnnotationModel(currentSelection, selectedNotes);
+            //    newGroup.AnnotationText = String.Concat(selectedGroupTitles);
+            //    newGroup.Height += 500;
+            //    newGroup.Width += 500;
+            //    newGroup.Background = "#3300FF";
+            //    XmlDocument doc = new XmlDocument();
+            //    VM.Model.CurrentWorkspace.CreateModel(newGroup.Serialize(doc, Dynamo.Graph.SaveContext.File));
+            //};
+            //BDmenuItem.Items.Add(GroupElements);
 
             RemoveTraceData = new MenuItem { Header = "Remove Session Trace Data from Current Graph" };
             RemoveTraceData.Click += (sender, args) =>
@@ -289,7 +400,6 @@ namespace BeyondDynamo
             ScriptImport = new MenuItem { Header = "Import From Script" };
             ScriptImport.Click +=(sender, args)=>
             {
-
                 BeyondDynamoFunctions.ImportFromScript(VM);
             };
             BDmenuItem.Items.Add(ScriptImport);
@@ -352,7 +462,7 @@ namespace BeyondDynamo
             AboutItem.Click += (sender, args) =>
             {
                 //Show the About dialog
-                About about = new About();
+                About about = new About(this.currentVersion);
                 about.Show();
             };
             BDmenuItem.Items.Add(AboutItem);
