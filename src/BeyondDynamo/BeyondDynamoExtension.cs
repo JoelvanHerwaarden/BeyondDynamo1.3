@@ -367,14 +367,14 @@ namespace BeyondDynamo
                 searchWindow.Show();
                 
             };
-            BDmenuItem.Items.Add(SearchWorkspace);
+            //BDmenuItem.Items.Add(SearchWorkspace);
 
             ClusterGroups = new MenuItem { Header = "Cluster Groups" };
             ClusterGroups.Click += (sender, args) =>
             {
                 BeyondDynamoFunctions.CulsterGroups(VM.Model.CurrentWorkspace);
             };
-            BDmenuItem.Items.Add(ClusterGroups);
+            //BDmenuItem.Items.Add(ClusterGroups);
 
             GroupColor = new MenuItem { Header = "Change Group Color" };
             GroupColor.Click += (sender, args) =>
