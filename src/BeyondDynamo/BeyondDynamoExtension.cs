@@ -31,6 +31,13 @@ namespace BeyondDynamo
     public class BeyondDynamoExtension : IViewExtension
     {
         /// <summary>
+        /// FilePath for Config File
+        /// </summary>
+        private string configFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dynamo\\Dynamo Core\\1.3\\beyondDynamoConfig.json");
+
+        private BeyondDynamoConfig config;
+
+        /// <summary>
         /// Request URL for the Releases
         /// </summary>
         private const string RequestUri = "https://api.github.com/repos/JoelvanHerwaarden/BeyondDynamo1.3/releases";
@@ -51,6 +58,8 @@ namespace BeyondDynamo
         /// Batch Remove Data Menu Item
         /// </summary>
         private MenuItem BatchRemoveTraceData;
+
+        private MenuItem SearchWorkspace;
 
         /// <summary>
         /// Change Group Color Menu Item
@@ -86,6 +95,11 @@ namespace BeyondDynamo
         /// Change Node Colors Menuitem
         /// </summary>
         private MenuItem ChangeNodeColors;
+
+        /// <summary>
+        /// Cluster Groups Menu Item
+        /// </summary>
+        private MenuItem ClusterGroups;
         
         /// <summary>
         /// About Window Menu Item
@@ -132,6 +146,8 @@ namespace BeyondDynamo
             {
                 this.latestVersion = this.currentVersion;
             }
+
+            config = new BeyondDynamoConfig(this.configFilePath);
         }
         /// <summary>
         /// CurrentSpaceViewModel_WorkspacePropertyEditRequested
@@ -146,6 +162,7 @@ namespace BeyondDynamo
         /// </summary>
         public void Shutdown()
         {
+            this.config.Save();
         }
         /// <summary>
         /// UniqueId
@@ -175,7 +192,7 @@ namespace BeyondDynamo
         {
             get
             {
-                return 1.1;
+                return 1.2;
             }
         }
 
@@ -304,54 +321,6 @@ namespace BeyondDynamo
             #endregion
 
             #region THE FUNCTIONS WHICH CAN RUN INSIDE AN ACTIVE GRAPH
-            //NodeManager = new MenuItem { Header = "Node Manager" };
-            //NodeManager.Click += (sender, args) =>
-            //{
-            //    WorkspaceModel workspace = VM.Model.CurrentWorkspace;
-            //    List<NodeModel> workSpaceNodes = new List<NodeModel>();
-            //    foreach(NodeModel node in workspace.Nodes)
-            //    {
-            //        workSpaceNodes.Add(node);
-            //    }
-            //    UI.NodeManagerWindow nodeManager = new NodeManagerWindow(workSpaceNodes);
-            //    nodeManager.Show();
-            //};
-            //BDmenuItem.Items.Add(NodeManager);
-
-            //GroupElements = new MenuItem { Header = "Merge Multiple Groups" };
-            //GroupElements.Click += (sender, args) =>
-            //{
-            //    WorkspaceModel workspace = VM.Model.CurrentWorkspace;
-            //    IEnumerable<NodeModel> currentSelection = workspace.CurrentSelection;
-            //    IList<NoteModel> selectedNotes = new List<NoteModel>();
-            //    IList<string> selectedGroupTitles = new List<string>();
-            //    foreach (NoteModel note in workspace.Notes)
-            //    {
-            //        if (note.IsSelected)
-            //        {
-            //            selectedNotes.Add(note);
-            //        }
-            //    }
-
-            //    foreach(AnnotationModel group in workspace.Annotations)
-            //    {
-            //        if (group.IsSelected)
-            //        {
-            //            selectedGroupTitles.Add(group.AnnotationText);
-            //            selectedGroupTitles.Add("\n");
-            //        }
-            //    }
-
-            //    AnnotationModel newGroup = new AnnotationModel(currentSelection, selectedNotes);
-            //    newGroup.AnnotationText = String.Concat(selectedGroupTitles);
-            //    newGroup.Height += 500;
-            //    newGroup.Width += 500;
-            //    newGroup.Background = "#3300FF";
-            //    XmlDocument doc = new XmlDocument();
-            //    VM.Model.CurrentWorkspace.CreateModel(newGroup.Serialize(doc, Dynamo.Graph.SaveContext.File));
-            //};
-            //BDmenuItem.Items.Add(GroupElements);
-
             RemoveTraceData = new MenuItem { Header = "Remove Session Trace Data from Current Graph" };
             RemoveTraceData.Click += (sender, args) =>
             {
@@ -390,10 +359,27 @@ namespace BeyondDynamo
             };
             BDmenuItem.Items.Add(RemoveTraceData);
 
+            SearchWorkspace = new MenuItem { Header = "Search Workspace" };
+            SearchWorkspace.Click += (sender, args) =>
+            {
+                //Initiate a new Change Node Color Window
+                SearchWorkspaceWindow searchWindow = new SearchWorkspaceWindow(VM.CurrentSpaceViewModel.Model);
+                searchWindow.Show();
+                
+            };
+            BDmenuItem.Items.Add(SearchWorkspace);
+
+            ClusterGroups = new MenuItem { Header = "Cluster Groups" };
+            ClusterGroups.Click += (sender, args) =>
+            {
+                BeyondDynamoFunctions.CulsterGroups(VM.Model.CurrentWorkspace);
+            };
+            BDmenuItem.Items.Add(ClusterGroups);
+
             GroupColor = new MenuItem { Header = "Change Group Color" };
             GroupColor.Click += (sender, args) =>
             {
-                BeyondDynamo.BeyondDynamoFunctions.ChangeGroupColor(VM.CurrentSpaceViewModel.Model);
+                config = BeyondDynamo.BeyondDynamoFunctions.ChangeGroupColor(VM.CurrentSpaceViewModel.Model, config);
             };
             BDmenuItem.Items.Add(GroupColor);
 
@@ -469,5 +455,7 @@ namespace BeyondDynamo
 
             p.dynamoMenu.Items.Add(BDmenuItem);
         }
+
+        
     }
 }

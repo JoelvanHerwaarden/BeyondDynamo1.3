@@ -302,7 +302,8 @@ namespace BeyondDynamo
         /// Changes the Colors of the Selected Groups in the Workspace Model by using a Color Picker UI
         /// </summary>
         /// <param name="model">The Current Dynamo Model</param>
-        public static void ChangeGroupColor(WorkspaceModel model)
+        /// <param name="config">The Beyond Dynamo Settings</param>
+        public static BeyondDynamoConfig ChangeGroupColor(WorkspaceModel model, BeyondDynamoConfig config)
         {
             List<AnnotationModel> selectedGroups = new List<AnnotationModel>();
             foreach (AnnotationModel group in model.Annotations)
@@ -315,6 +316,10 @@ namespace BeyondDynamo
             if (selectedGroups.Count > 0)
             {
                 System.Windows.Forms.ColorDialog colorDialog = new System.Windows.Forms.ColorDialog();
+                if(config.customColors != null)
+                {
+                    colorDialog.CustomColors = config.customColors;
+                }
                 if (colorDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     foreach(AnnotationModel group in selectedGroups)
@@ -322,7 +327,60 @@ namespace BeyondDynamo
                         string colorString = System.Drawing.ColorTranslator.ToHtml(colorDialog.Color);
                         group.Background = colorString;
                     }
+                    config.customColors = colorDialog.CustomColors;
                 }
+            }
+            else
+            {
+                System.Windows.MessageBox.Show("No Groups selected");
+            }
+
+            return config;
+        }
+
+        /// <summary>
+        /// Clusters multiple groups into 1 group
+        /// </summary>
+        /// <param name="model">The Current Dynamo Model</param>
+        public static void CulsterGroups(WorkspaceModel model)
+        {
+            List<AnnotationModel> selectedGroups = new List<AnnotationModel>();
+            foreach (AnnotationModel group in model.Annotations)
+            {
+                if (group.IsSelected)
+                {
+                    selectedGroups.Add(group);
+                }
+            }
+            if (selectedGroups.Count > 0)
+            {
+                IEnumerable<NodeModel> currentSelection = model.CurrentSelection;
+                IList<NoteModel> selectedNotes = new List<NoteModel>();
+                IList<string> selectedGroupTitles = new List<string>();
+                foreach (NoteModel note in model.Notes)
+                {
+                    if (note.IsSelected)
+                    {
+                        selectedNotes.Add(note);
+                    }
+                }
+
+                foreach (AnnotationModel group in model.Annotations)
+                {
+                    if (group.IsSelected)
+                    {
+                        selectedGroupTitles.Add(group.AnnotationText);
+                        selectedGroupTitles.Add("\n");
+                    }
+                }
+
+                AnnotationModel newGroup = new AnnotationModel(currentSelection, selectedNotes);
+                newGroup.AnnotationText = System.String.Concat(selectedGroupTitles);
+                newGroup.Height += 500;
+                newGroup.Width += 500;
+                newGroup.Background = "#3300FF";
+                XmlDocument doc = new XmlDocument();
+                model.CreateModel(newGroup.Serialize(doc, Dynamo.Graph.SaveContext.File));
             }
             else
             {
