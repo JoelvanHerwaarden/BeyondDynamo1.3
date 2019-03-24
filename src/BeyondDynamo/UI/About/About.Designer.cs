@@ -42,9 +42,10 @@
             this.LinkedIn_Label.BackColor = System.Drawing.Color.Transparent;
             this.LinkedIn_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LinkedIn_Label.ForeColor = System.Drawing.Color.White;
-            this.LinkedIn_Label.Location = new System.Drawing.Point(117, 432);
+            this.LinkedIn_Label.Location = new System.Drawing.Point(121, 425);
+            this.LinkedIn_Label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LinkedIn_Label.Name = "LinkedIn_Label";
-            this.LinkedIn_Label.Size = new System.Drawing.Size(363, 20);
+            this.LinkedIn_Label.Size = new System.Drawing.Size(311, 17);
             this.LinkedIn_Label.TabIndex = 6;
             this.LinkedIn_Label.Text = "www.linkedin.com/in/Joel-van-Herwaarden";
             this.LinkedIn_Label.Click += new System.EventHandler(this.LinkedIn_Label_Click);
@@ -56,11 +57,12 @@
             this.versionLabel.AutoSize = true;
             this.versionLabel.BackColor = System.Drawing.Color.Transparent;
             this.versionLabel.ForeColor = System.Drawing.Color.Silver;
-            this.versionLabel.Location = new System.Drawing.Point(995, 469);
+            this.versionLabel.Location = new System.Drawing.Point(984, 462);
+            this.versionLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.versionLabel.Name = "versionLabel";
-            this.versionLabel.Size = new System.Drawing.Size(79, 17);
+            this.versionLabel.Size = new System.Drawing.Size(36, 13);
             this.versionLabel.TabIndex = 8;
-            this.versionLabel.Text = "Build: 1.0.0";
+            this.versionLabel.Text = "Build: ";
             // 
             // GitHub_Label
             // 
@@ -68,9 +70,10 @@
             this.GitHub_Label.BackColor = System.Drawing.Color.Transparent;
             this.GitHub_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GitHub_Label.ForeColor = System.Drawing.Color.Transparent;
-            this.GitHub_Label.Location = new System.Drawing.Point(651, 432);
+            this.GitHub_Label.Location = new System.Drawing.Point(666, 425);
+            this.GitHub_Label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.GitHub_Label.Name = "GitHub_Label";
-            this.GitHub_Label.Size = new System.Drawing.Size(241, 20);
+            this.GitHub_Label.Size = new System.Drawing.Size(208, 17);
             this.GitHub_Label.TabIndex = 9;
             this.GitHub_Label.Text = "Beyond Dynamo 1.3 GitHub";
             this.GitHub_Label.Click += new System.EventHandler(this.GitHub_Label_Click);
@@ -79,15 +82,16 @@
             // 
             // About
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.BackgroundImage = global::BeyondDynamo.resources.BeyondDynamo_Banner;
-            this.ClientSize = new System.Drawing.Size(1086, 495);
+            this.ClientSize = new System.Drawing.Size(1091, 484);
             this.Controls.Add(this.GitHub_Label);
             this.Controls.Add(this.versionLabel);
             this.Controls.Add(this.LinkedIn_Label);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "About";

@@ -50,5 +50,6 @@ namespace BeyondDynamo.UI.About
             GitHub_Label.ForeColor = System.Drawing.ColorTranslator.FromHtml("#FFFFFF");
         }
         #endregion
+        
     }
 }
