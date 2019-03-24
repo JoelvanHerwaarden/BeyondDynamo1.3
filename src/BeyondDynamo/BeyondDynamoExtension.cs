@@ -33,6 +33,11 @@ namespace BeyondDynamo
         /// <summary>
         /// FilePath for Config File
         /// </summary>
+        private string configFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dynamo\\Dynamo Core\\1.3");
+
+        /// <summary>
+        /// FilePath for Config File
+        /// </summary>
         private string configFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dynamo\\Dynamo Core\\1.3\\beyondDynamoConfig.json");
 
         private BeyondDynamoConfig config;
@@ -146,7 +151,7 @@ namespace BeyondDynamo
             {
                 this.latestVersion = this.currentVersion;
             }
-
+            Directory.CreateDirectory(configFolderPath);
             config = new BeyondDynamoConfig(this.configFilePath);
         }
         /// <summary>
@@ -192,7 +197,7 @@ namespace BeyondDynamo
         {
             get
             {
-                return 1.2;
+                return 1.3;
             }
         }
 
@@ -455,7 +460,6 @@ namespace BeyondDynamo
 
             p.dynamoMenu.Items.Add(BDmenuItem);
         }
-
-        
+               
     }
 }
