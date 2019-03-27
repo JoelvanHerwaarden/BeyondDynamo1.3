@@ -29,7 +29,7 @@ namespace BeyondDynamo
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        private static string DynamoCoreLanguage(string filePath)
+        public static string DynamoCoreLanguage(string filePath)
         {
             string coreString = File.ReadAllText(filePath);
             if (coreString.StartsWith("<"))
@@ -122,7 +122,38 @@ namespace BeyondDynamo
             {
                 return succes;
             }
-            
+        }
+
+        /// <summary>
+        /// Removes the Bindings from a given Filepath. This one is made for Dynamo 2.0
+        /// </summary>
+        /// <param name="DynamoFilepath"></param>
+        /// <returns></returns>
+        public static bool RemoveBindings(string DynamoFilepath)
+        {
+            bool succes = false;
+
+            //Convert the Dynamo File to a Json Text
+            string jsonString = File.ReadAllText(DynamoFilepath);
+
+            //Create a JObject from the Json Text
+            JObject dynamoGraph = JObject.Parse(jsonString);
+
+            //Loop over the Output Nodes and get their names
+            JToken bindings = dynamoGraph.SelectToken("Bindings");
+            JContainer bindingsParent = null;
+            foreach (JToken child in bindings.Children())
+            {
+                bindingsParent = child.Parent;
+            }
+            if (bindingsParent != null)
+            {
+                bindingsParent.RemoveAll();
+                succes = true;
+            }
+            //Write that string 
+            File.WriteAllText(DynamoFilepath, dynamoGraph.ToString());
+            return succes;
         }
 
         /// <summary>
@@ -337,57 +368,7 @@ namespace BeyondDynamo
 
             return config;
         }
-
-        /// <summary>
-        /// Clusters multiple groups into 1 group
-        /// </summary>
-        /// <param name="model">The Current Dynamo Model</param>
-        public static void CulsterGroups(WorkspaceModel model)
-        {
-            List<AnnotationModel> selectedGroups = new List<AnnotationModel>();
-            foreach (AnnotationModel group in model.Annotations)
-            {
-                if (group.IsSelected)
-                {
-                    selectedGroups.Add(group);
-                }
-            }
-            if (selectedGroups.Count > 0)
-            {
-                IEnumerable<NodeModel> currentSelection = model.CurrentSelection;
-                IList<NoteModel> selectedNotes = new List<NoteModel>();
-                IList<string> selectedGroupTitles = new List<string>();
-                foreach (NoteModel note in model.Notes)
-                {
-                    if (note.IsSelected)
-                    {
-                        selectedNotes.Add(note);
-                    }
-                }
-
-                foreach (AnnotationModel group in model.Annotations)
-                {
-                    if (group.IsSelected)
-                    {
-                        selectedGroupTitles.Add(group.AnnotationText);
-                        selectedGroupTitles.Add("\n");
-                    }
-                }
-
-                AnnotationModel newGroup = new AnnotationModel(currentSelection, selectedNotes);
-                newGroup.AnnotationText = System.String.Concat(selectedGroupTitles);
-                newGroup.Height += 500;
-                newGroup.Width += 500;
-                newGroup.Background = "#3300FF";
-                XmlDocument doc = new XmlDocument();
-                model.CreateModel(newGroup.Serialize(doc, Dynamo.Graph.SaveContext.File));
-            }
-            else
-            {
-                System.Windows.MessageBox.Show("No Groups selected");
-            }
-        }
-
+        
         /// <summary>
         /// This Functions Calls a Text Editor Window for Each Selected Note in the Dynamo Model.
         /// </summary>

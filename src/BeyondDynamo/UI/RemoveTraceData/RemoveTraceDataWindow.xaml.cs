@@ -76,8 +76,16 @@ namespace BeyondDynamo.UI
                     continue;
                 }
 
-                //Try to remove Trace Data from filepath
-                bool succes = BeyondDynamoFunctions.RemoveSessionTraceData(filePath);
+                string coreLanguage = BeyondDynamoFunctions.DynamoCoreLanguage(filePath);
+                bool succes = false;
+                if (coreLanguage == "XML")
+                {
+                    succes = BeyondDynamoFunctions.RemoveSessionTraceData(filePath);
+                }
+                else if(coreLanguage == "JSON")
+                {
+                    succes = BeyondDynamoFunctions.RemoveBindings(filePath);
+                }
 
                 if (succes)
                 {

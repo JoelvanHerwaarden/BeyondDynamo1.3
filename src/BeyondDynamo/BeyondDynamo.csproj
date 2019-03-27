@@ -168,10 +168,8 @@
     <Compile Include="UI\About\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\ChangeNodeColor\ChangeNodeColorsWindow.xaml.cs">
-      <DependentUpon>ChangeNodeColorsWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UI\ChangeNodeColor\ChangeNodeColorsViewModel.cs" />
+    <Compile Include="UI\ChangeNodeColor\ChangeNodeColorsWindow.xaml.cs" />
     <Compile Include="UI\OrderPlayerInput\OrderPlayerInputViewModel.cs" />
     <Compile Include="UI\OrderPlayerInput\OrderPlayerInputWindow.xaml.cs">
       <DependentUpon>OrderPlayerInputWindow.xaml</DependentUpon>
@@ -202,8 +200,8 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="UI\ChangeNodeColor\ChangeNodeColorsWindow.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UI\OrderPlayerInput\OrderPlayerInputWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

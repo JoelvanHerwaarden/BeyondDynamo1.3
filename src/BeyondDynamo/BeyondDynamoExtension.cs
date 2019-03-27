@@ -6,21 +6,9 @@ using Dynamo.ViewModels;
 using BeyondDynamo.UI.About;
 using BeyondDynamo.UI;
 using Forms = System.Windows.Forms;
-using System.Windows.Media.Imaging;
-using Dynamo.Graph.Workspaces;
-using Dynamo.Graph.Nodes;
-using DynamoCore.UI.Controls;
-using System.Windows.Media;
 using System.IO;
-using System.Windows.Markup;
 using System.Xml;
-using static Dynamo.Models.DynamoModel;
-using System.Net.Http;
 using System.Net;
-using System.Text;
-using Octokit;
-using Dynamo.Graph.Notes;
-using Dynamo.Graph.Annotations;
 using Newtonsoft.Json.Linq;
 
 namespace BeyondDynamo
@@ -33,12 +21,12 @@ namespace BeyondDynamo
         /// <summary>
         /// FilePath for Config File
         /// </summary>
-        private string configFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dynamo\\Dynamo Core\\1.3");
+        private string configFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dynamo\\Dynamo Core\\BeyondDynamoSettings");
 
         /// <summary>
         /// FilePath for Config File
         /// </summary>
-        private string configFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dynamo\\Dynamo Core\\1.3\\beyondDynamoConfig.json");
+        private string configFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dynamo\\Dynamo Core\\BeyondDynamoSettings\\beyondDynamo1Config.json");
 
         private BeyondDynamoConfig config;
 
@@ -124,6 +112,12 @@ namespace BeyondDynamo
         {
             try
             {
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+                       | SecurityProtocolType.Tls11
+                       | SecurityProtocolType.Tls12
+                       | SecurityProtocolType.Ssl3;
+
                 List<double> releasedVersions = new List<double>();
 
                 HttpWebRequest webRequest = WebRequest.CreateHttp(RequestUri);
@@ -373,13 +367,6 @@ namespace BeyondDynamo
                 
             };
             //BDmenuItem.Items.Add(SearchWorkspace);
-
-            ClusterGroups = new MenuItem { Header = "Cluster Groups" };
-            ClusterGroups.Click += (sender, args) =>
-            {
-                BeyondDynamoFunctions.CulsterGroups(VM.Model.CurrentWorkspace);
-            };
-            //BDmenuItem.Items.Add(ClusterGroups);
 
             GroupColor = new MenuItem { Header = "Change Group Color" };
             GroupColor.Click += (sender, args) =>
