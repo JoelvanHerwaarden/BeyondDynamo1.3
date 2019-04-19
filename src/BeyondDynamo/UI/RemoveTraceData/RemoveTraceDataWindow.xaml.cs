@@ -82,7 +82,7 @@ namespace BeyondDynamo.UI
                 {
                     succes = BeyondDynamoFunctions.RemoveSessionTraceData(filePath);
                 }
-                else if(coreLanguage == "JSON")
+                else if(coreLanguage == "Json")
                 {
                     succes = BeyondDynamoFunctions.RemoveBindings(filePath);
                 }

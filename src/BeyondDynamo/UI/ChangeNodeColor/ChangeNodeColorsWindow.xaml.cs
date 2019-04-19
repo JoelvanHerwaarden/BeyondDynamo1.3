@@ -21,6 +21,8 @@ namespace BeyondDynamo.UI
     /// </summary>
     public partial class ChangeNodeColorsWindow : Window
     {
+        public BeyondDynamoConfig config { get; set; }
+
         private System.Windows.ResourceDictionary dynamoNodeSettings { get; set; }
 
         private SolidColorBrush _ITitleText { get; set; }
@@ -52,9 +54,11 @@ namespace BeyondDynamo.UI
         /// Public constructor for making the Change node color window
         /// </summary>
         /// <param name="DynamoNodeSettings"></param>
-        public ChangeNodeColorsWindow(System.Windows.ResourceDictionary DynamoNodeSettings)
+        public ChangeNodeColorsWindow(System.Windows.ResourceDictionary DynamoNodeSettings, BeyondDynamoConfig beyondDynamoConfig)
         {
             InitializeComponent();
+
+            this.config = beyondDynamoConfig;
             this.dynamoNodeSettings = DynamoNodeSettings;
             this._ITitleText                      = (SolidColorBrush)dynamoNodeSettings["headerForegroundInactive"];
             this._ITitleBackground                = (SolidColorBrush)dynamoNodeSettings["headerBackgroundInactive"];
@@ -114,7 +118,14 @@ namespace BeyondDynamo.UI
         private void changeColorButton_Click(object sender, RoutedEventArgs e)
         {
             Button changeColorButton = (Button)sender;
+
             System.Windows.Forms.ColorDialog colorDialog = new System.Windows.Forms.ColorDialog();
+
+            if (config.customColors != null)
+            {
+                colorDialog.CustomColors = config.customColors;
+            }
+
             if (colorDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 System.Drawing.Color color = colorDialog.Color;
@@ -126,6 +137,7 @@ namespace BeyondDynamo.UI
                     B = color.B
                 };
                 changeColorButton.Background = new SolidColorBrush(newColor);
+                config.customColors = colorDialog.CustomColors;
             }
         }
 
@@ -160,6 +172,7 @@ namespace BeyondDynamo.UI
                 System.Windows.Forms.SaveFileDialog fileDialog = new Forms.SaveFileDialog();
 
                 // Set the Right file name for the Template file
+                fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
                 fileDialog.FileName = Path.GetFileName(filePath.Replace("%20", " "));
                 fileDialog.DefaultExt = "*.xaml";
 

@@ -21,12 +21,12 @@ namespace BeyondDynamo
         /// <summary>
         /// FilePath for Config File
         /// </summary>
-        private string configFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dynamo\\Dynamo Core\\BeyondDynamoSettings");
+        private string configFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dynamo\\BeyondDynamoSettings");
 
         /// <summary>
         /// FilePath for Config File
         /// </summary>
-        private string configFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dynamo\\Dynamo Core\\BeyondDynamoSettings\\beyondDynamo1Config.json");
+        private string configFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dynamo\\BeyondDynamoSettings\\beyondDynamo1Config.json");
 
         private BeyondDynamoConfig config;
 
@@ -88,12 +88,7 @@ namespace BeyondDynamo
         /// Change Node Colors Menuitem
         /// </summary>
         private MenuItem ChangeNodeColors;
-
-        /// <summary>
-        /// Cluster Groups Menu Item
-        /// </summary>
-        private MenuItem ClusterGroups;
-        
+                
         /// <summary>
         /// About Window Menu Item
         /// </summary>
@@ -232,7 +227,7 @@ namespace BeyondDynamo
                 System.Windows.ResourceDictionary dynamoUI = Dynamo.UI.SharedDictionaryManager.DynamoColorsAndBrushesDictionary;
 
                 //Initiate a new Change Node Color Window
-                ChangeNodeColorsWindow colorWindow = new ChangeNodeColorsWindow(dynamoUI)
+                ChangeNodeColorsWindow colorWindow = new ChangeNodeColorsWindow(dynamoUI, config)
                 {
                     // Set the data context for the main grid in the window.
                     MainGrid = { DataContext = viewModel },
