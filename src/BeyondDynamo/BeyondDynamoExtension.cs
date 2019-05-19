@@ -136,10 +136,10 @@ namespace BeyondDynamo
                 releasedVersions.Sort();
                 this.latestVersion = releasedVersions[releasedVersions.Count - 1];
             }
-            catch(Exception)
+            catch(Exception exception)
             {
-                Forms.MessageBox.Show(text:"Could not get a response from GitHub for version control", caption: "Beyond Dynamo 1.3", icon: Forms.MessageBoxIcon.Warning, buttons: Forms.MessageBoxButtons.OK);
-                
+                string message = "Could not get a response from GitHub for version control" + "\n\n\n" + exception.ToString();
+                Forms.MessageBox.Show(text: message, caption: "Beyond Dynamo 1.3", icon: Forms.MessageBoxIcon.Warning, buttons: Forms.MessageBoxButtons.OK);
                 this.latestVersion = this.currentVersion;
             }
             Directory.CreateDirectory(configFolderPath);
