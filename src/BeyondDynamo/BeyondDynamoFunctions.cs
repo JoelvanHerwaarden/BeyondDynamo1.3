@@ -182,6 +182,9 @@ namespace BeyondDynamo
                 {
                     return;
                 }
+
+                //Zoom in on the Imported Script
+                viewModel.FitViewCommand.Execute(viewModel.CurrentSpaceViewModel);
             }
         }
 

@@ -28,6 +28,9 @@ namespace BeyondDynamo
         /// </summary>
         private string configFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dynamo\\BeyondDynamoSettings\\beyondDynamo1Config.json");
 
+        /// <summary>
+        /// The Configuration for the Beyond Dynamo settings
+        /// </summary>
         private BeyondDynamoConfig config;
 
         /// <summary>
@@ -51,9 +54,7 @@ namespace BeyondDynamo
         /// Batch Remove Data Menu Item
         /// </summary>
         private MenuItem BatchRemoveTraceData;
-
-        private MenuItem SearchWorkspace;
-
+        
         /// <summary>
         /// Change Group Color Menu Item
         /// </summary>
@@ -93,7 +94,6 @@ namespace BeyondDynamo
         /// About Window Menu Item
         /// </summary>
         private MenuItem AboutItem;
-        
         
         /// <summary>
         /// Dispose
@@ -136,13 +136,24 @@ namespace BeyondDynamo
                 releasedVersions.Sort();
                 this.latestVersion = releasedVersions[releasedVersions.Count - 1];
             }
-            catch
+            catch(Exception)
             {
+                Forms.MessageBox.Show(text:"Could not get a response from GitHub for version control", caption: "Beyond Dynamo 1.3", icon: Forms.MessageBoxIcon.Warning, buttons: Forms.MessageBoxButtons.OK);
+                
                 this.latestVersion = this.currentVersion;
             }
             Directory.CreateDirectory(configFolderPath);
-            config = new BeyondDynamoConfig(this.configFilePath);
+            try
+            {
+                config = new BeyondDynamoConfig(this.configFilePath);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Forms.MessageBox.Show("Could not find Beyond Dynamo Config settings", caption: "Beyond Dynamo 1.3", icon:Forms.MessageBoxIcon.Warning, buttons:Forms.MessageBoxButtons.OK);
+                Forms.MessageBox.Show(e.ToString());
+            }
         }
+
         /// <summary>
         /// CurrentSpaceViewModel_WorkspacePropertyEditRequested
         /// </summary>
@@ -216,6 +227,7 @@ namespace BeyondDynamo
             }
 
             #region THE FUNCTIONS WHICH CAN RUN OUTSIDE AN ACTIVE GRAPH
+
 
             ChangeNodeColors = new MenuItem { Header = "Change Node Color" };
             ChangeNodeColors.Click += (sender, args) =>
@@ -352,17 +364,7 @@ namespace BeyondDynamo
                 VM.Model.OpenFileFromPath(filePath);
             };
             BDmenuItem.Items.Add(RemoveTraceData);
-
-            SearchWorkspace = new MenuItem { Header = "Search Workspace" };
-            SearchWorkspace.Click += (sender, args) =>
-            {
-                //Initiate a new Change Node Color Window
-                SearchWorkspaceWindow searchWindow = new SearchWorkspaceWindow(VM.CurrentSpaceViewModel.Model);
-                searchWindow.Show();
-                
-            };
-            //BDmenuItem.Items.Add(SearchWorkspace);
-
+            
             GroupColor = new MenuItem { Header = "Change Group Color" };
             GroupColor.Click += (sender, args) =>
             {
