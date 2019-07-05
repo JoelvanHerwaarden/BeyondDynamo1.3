@@ -11,6 +11,7 @@ using System.Xml;
 using System.Net;
 using Newtonsoft.Json.Linq;
 
+
 namespace BeyondDynamo
 {
     /// <summary>
@@ -89,7 +90,12 @@ namespace BeyondDynamo
         /// Change Node Colors Menuitem
         /// </summary>
         private MenuItem ChangeNodeColors;
-                
+
+        /// <summary>
+        /// Player script menu item
+        /// </summary>
+        private MenuItem PlayerScripts;
+
         /// <summary>
         /// About Window Menu Item
         /// </summary>
@@ -154,14 +160,6 @@ namespace BeyondDynamo
             }
         }
 
-        /// <summary>
-        /// CurrentSpaceViewModel_WorkspacePropertyEditRequested
-        /// </summary>
-        /// <param name="workspace"></param>
-        private void CurrentSpaceViewModel_WorkspacePropertyEditRequested(Dynamo.Graph.Workspaces.WorkspaceModel workspace)
-        {
-            throw new NotImplementedException();
-        }
         /// <summary>
         /// Shutdown
         /// </summary>
@@ -321,6 +319,42 @@ namespace BeyondDynamo
                 }
             };
             BDmenuItem.Items.Add(OrderPlayerInput);
+
+            PlayerScripts = new MenuItem { Header = "Player Graphs" };
+            MenuItem openPlayerPath = new MenuItem { Header = "Open Player Path" };
+            openPlayerPath.Click += (sender, args) =>
+            {
+                System.Diagnostics.Process.Start(this.config.playerPath);
+            };
+
+            MenuItem setPlayerPath = new MenuItem { Header = "Set Player Path" };
+            List<MenuItem> extraMenuItems = new List<MenuItem> { setPlayerPath, openPlayerPath };
+            setPlayerPath.Click += (sender, args) =>
+            {
+                Forms.FolderBrowserDialog browserDialog = new Forms.FolderBrowserDialog();
+                if (this.config.playerPath != null)
+                {
+                    browserDialog.SelectedPath = this.config.playerPath;
+                }
+                if (browserDialog.ShowDialog() == Forms.DialogResult.OK)
+                {
+                    if (browserDialog.SelectedPath != null)
+                    {
+                        PlayerScripts.Items.Clear();
+                        BeyondDynamoFunctions.RetrievePlayerFiles(PlayerScripts, VM, browserDialog.SelectedPath, extraMenuItems);
+                        this.config.playerPath = browserDialog.SelectedPath;
+                    }
+                }
+            };
+            if (this.config.playerPath != null)
+            {
+                BeyondDynamoFunctions.RetrievePlayerFiles(PlayerScripts, VM, this.config.playerPath, extraMenuItems);
+            }
+            else
+            {
+                PlayerScripts.Items.Add(setPlayerPath);
+            }
+            BDmenuItem.Items.Add(PlayerScripts);
 
             BDmenuItem.Items.Add(new Separator());
             BDmenuItem.Items.Add(new Separator());

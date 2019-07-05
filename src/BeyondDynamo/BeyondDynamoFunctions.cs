@@ -16,6 +16,7 @@ using Forms = System.Windows.Forms;
 using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Controls = System.Windows.Controls;
 
 namespace BeyondDynamo
 {
@@ -432,6 +433,108 @@ namespace BeyondDynamo
                 }
             }
             return inputNodeNames;
+        }
+        /// <summary>
+        /// Retrieves all player scripts from a Given folder and creates menuItems for them.
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="model"></param>
+        /// <param name="filePath"></param>
+        /// <param name="extraItems"></param>
+        public static void RetrievePlayerFiles(Controls.MenuItem owner, DynamoViewModel viewModel, string filePath, List<Controls.MenuItem> extraItems)
+        {
+            DynamoModel model = viewModel.Model;
+            // Check if the Filepath is not Empty
+            if (filePath != "")
+            {
+                // Get all the Files from the given Directory Path, which comes out of the Configuration file
+                string[] filePaths = Directory.GetFiles(filePath);
+                foreach (string path in filePaths)
+                {
+                    //Check if the File is a Dynamo File
+                    if (Path.GetExtension(path) == ".dyn")
+                    {
+                        // Get the File Name
+                        string fileName = Path.GetFileNameWithoutExtension(path);
+
+                        //Make a Menu Item for each File
+                        Controls.MenuItem item = new Controls.MenuItem { Header = fileName };
+                        item.ToolTip = new Controls.ToolTip { Content = path };
+
+                        //Create a clicking Event
+                        item.Click += (sender, args) =>
+                        {
+                            //Check if the Current Model need Saving
+                            if (model.CurrentWorkspace.HasUnsavedChanges)
+                            {
+                                //Show Prompt Window for Saving
+                                MessageBoxResult result = MessageBox.Show("Do you want to Save the current Workspace?", "Save", MessageBoxButton.YesNoCancel);
+                                if (result == MessageBoxResult.Yes)
+                                {
+                                    //Check if the model already has a Filepath
+                                    if (model.CurrentWorkspace.FileName == "")
+                                    {
+                                        //If there is no Filepath, show a Save as dialog
+                                        Forms.SaveFileDialog dialog = new Forms.SaveFileDialog();
+                                        dialog.AddExtension = true;
+                                        dialog.DefaultExt = "dyn";
+                                        dialog.Filter = "Dynamo Files (*.dyn)|*.dyn";
+                                        if (Forms.DialogResult.OK == dialog.ShowDialog())
+                                        {
+                                            // Save the File
+                                            model.CurrentWorkspace.SaveAs(dialog.FileName, viewModel.EngineController.LiveRunnerRuntimeCore);
+
+                                            //Open the new File
+                                            model.OpenFileFromPath(path, true);
+                                            model.CurrentWorkspace.HasUnsavedChanges = true;
+                                        }
+                                    }
+                                    //If there is a Filepath, Save the File
+                                    else
+                                    {
+                                        //Save the File
+                                        model.CurrentWorkspace.Save(viewModel.EngineController.LiveRunnerRuntimeCore);
+
+                                        //Open the New File
+                                        model.OpenFileFromPath(path, true);
+                                        model.CurrentWorkspace.HasUnsavedChanges = true;
+                                    }
+                                }
+                                // If the user doesn't want to save the current file, then open the Player file
+                                else if (result == MessageBoxResult.No)
+                                {
+                                    model.OpenFileFromPath(path, true);
+                                    model.CurrentWorkspace.HasUnsavedChanges = true;
+                                }
+                            }
+
+                            //If there are No unsaved changes, Open the File
+                            else
+                            {
+                                model.OpenFileFromPath(path, true);
+                                model.CurrentWorkspace.HasUnsavedChanges = true;
+                            }
+                            
+
+                        };
+
+                        //Add the Item to the Player scripts MenuItem
+                        owner.Items.Add(item);
+                    }
+                }
+
+                // Add the Extra Menu items
+                owner.Items.Add(new Controls.Separator());
+                foreach (Controls.MenuItem item in extraItems)
+                {
+                    owner.Items.Add(item);
+                }
+            }
+            // If the Filepath is empty, Only add the "Set Player Path" Menu Item 
+            else
+            {
+                owner.Items.Add(extraItems[0]);
+            }
         }
     }
 }

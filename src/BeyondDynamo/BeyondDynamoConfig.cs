@@ -18,6 +18,8 @@ namespace BeyondDynamo
 
         public int[] customColors { get; set; }
 
+        public string playerPath { get; set; }
+
         public BeyondDynamoConfig(string configFilePath)
         {
             ConfigFilePath = configFilePath;
@@ -28,6 +30,21 @@ namespace BeyondDynamo
                 {
                     JToken config = JToken.Parse(content);
                     customColors = Newtonsoft.Json.JsonConvert.DeserializeObject<int[]>(config["customColors"].ToString());
+                    try
+                    {
+                        if (config["playerPath"].ToString() != "null")
+                        {
+                            playerPath = config["playerPath"].ToString();
+                        }
+                        else
+                        {
+                            throw new Exception();
+                        }
+                    }
+                    catch
+                    {
+                        playerPath = null;
+                    }
                 }
             }
             else
@@ -45,8 +62,8 @@ namespace BeyondDynamo
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(this.ConfigFilePath))
             {
                 file.WriteLine(jsonString);
-            }            
+            }
         }
-        
+
     }
 }
